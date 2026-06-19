@@ -11,8 +11,4 @@ class Panel(UIElement):
         self.color = color
 
     def draw(self, screen):
-        pygame.draw.rect(
-            screen,
-            self.color,
-            self.rect
-        )
+        pygame.draw.rect(screen,self.color,self.rect)
