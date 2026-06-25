@@ -1,10 +1,11 @@
+let mapMode = "budapest";
+
 async function loadState() {
 
     const res = await fetch("/state");
     const data = await res.json();
 
-    document.getElementById("time").innerText =
-        data.time;
+    document.getElementById("time").innerText = data.time;
 
     document.getElementById("resources").innerText =
         `Elégedettség: ${data.elegedettseg} | ` +
@@ -14,12 +15,7 @@ async function loadState() {
 
 async function endTurn() {
 
-    await fetch(
-        "/end_turn",
-        {
-            method: "POST"
-        }
-    );
+    await fetch("/end_turn", { method: "POST" });
 
     await loadState();
 }

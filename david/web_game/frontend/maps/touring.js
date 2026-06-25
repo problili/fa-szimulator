@@ -1,6 +1,7 @@
 let map;
 let treeMarkers = [];
-let mapMode = "budapest";
+
+window.mapMode = "budapest";
 
 const treeIcon = L.icon({
     iconUrl: "/static/assets/tree.png",
@@ -8,87 +9,80 @@ const treeIcon = L.icon({
     iconAnchor: [12, 12]
 });
 
-function setTouringMap() {
+async function setTouringMap() {
 
-    mapMode = "touring";
+    window.mapMode = "touring";
+
+    await fetch("/touring/start");
 
     if (map) {
         map.remove();
+        map = null;
     }
 
-    map = L.map("map").setView(
-        [47.1625, 19.5033],
-        7
-    );
+    document.getElementById("map").innerHTML = "";
 
-    L.tileLayer(
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            maxZoom: 19,
-            attribution: "© OpenStreetMap"
-        }
-    ).addTo(map);
+    map = L.map("map").setView([47.1625, 19.5033], 7);
 
-    loadTrees();
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap"
+    }).addTo(map);
 
-    document.getElementById("touringButton").innerText =
-        "Budapest";
+    await loadTrees();
+
+    document.getElementById("touringButton").innerText = "Budapest";
 }
 
 function setBudapestMap() {
 
-    mapMode = "budapest";
+    window.mapMode = "budapest";
 
     if (map) {
         map.remove();
+        map = null;
     }
 
-    map = L.map("map").setView(
-        [47.4979, 19.0402],
-        12
-    );
+    document.getElementById("map").innerHTML = "";
 
-    L.tileLayer(
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            maxZoom: 19,
-            attribution: "© OpenStreetMap"
-        }
-    ).addTo(map);
+    map = L.map("map").setView([47.4979, 19.0402], 12);
 
-    document.getElementById("touringButton").innerText =
-        "Touring";
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap"
+    }).addTo(map);
+
+    document.getElementById("touringButton").innerText = "Touring";
 }
-
 
 async function loadTrees() {
 
     const res = await fetch("/trees");
     const data = await res.json();
 
-    console.log("TREES FROM BACKEND:", data);
+    console.log("TREES:", data);
 
     treeMarkers.forEach(m => map.removeLayer(m));
     treeMarkers = [];
 
     data.forEach(point => {
-        console.log("ADDING MARKER:", point);
 
-        const marker = L.marker(
-            [point.lat, point.lon],
-            { icon: treeIcon }
-        ).addTo(map);
+        const marker = L.marker([point.lat, point.lon], {
+            icon: treeIcon
+        }).addTo(map);
 
         treeMarkers.push(marker);
     });
 }
 
-
-function toggleTouring() {
-
-    if (mapMode === "touring") {
+/* CRITICAL: expose functions globally */
+window.toggleTouring = function () {
+    if (window.mapMode === "touring") {
         setBudapestMap();
     } else {
         setTouringMap();
     }
-}
+};
+
+window.setTouringMap = setTouringMap;
+window.setBudapestMap = setBudapestMap;

@@ -3,16 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <title>Strategy Game</title>
+    <title>Fa-szimulátor</title>
 
     <link rel="stylesheet" href="/static/style.css">
 
     <!-- Leaflet CSS -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet/dist/leaflet.css"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
 
 <body>
@@ -21,24 +17,14 @@
 
     <div class="sidebar">
 
-        <button onclick="openProfile()">
-            Profile
-        </button>
+        <button onclick="openProfile()">Profile</button>
+        <button onclick="openMissions()">Missions</button>
 
-        <button onclick="openMissions()">
-            Missions
-        </button>
-
-        <button
-            id="touringButton"
-            onclick="toggleTouring()"
-        >
+        <button id="touringButton" onclick="toggleTouring()">
             Touring
         </button>
 
-        <button onclick="endTurn()">
-            End Turn
-        </button>
+        <button onclick="endTurn()">End Turn</button>
 
     </div>
 
@@ -48,7 +34,7 @@
             <div id="time"></div>
         </div>
 
-        <!-- Interactive map -->
+        <!-- IMPORTANT: ensure map has height in CSS -->
         <div id="map"></div>
 
         <div class="resources">
@@ -59,10 +45,8 @@
 
 </div>
 
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<!-- Your code -->
 <script src="/static/app.js"></script>
 <script src="/static/maps/touring.js"></script>
 
