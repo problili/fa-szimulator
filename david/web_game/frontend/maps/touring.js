@@ -3,7 +3,7 @@ let treeMarkers = [];
 let mapMode = "budapest";
 
 const treeIcon = L.icon({
-    iconUrl: "../assets/tree.png",
+    iconUrl: "/static/assets/tree.png",
     iconSize: [24, 24],
     iconAnchor: [12, 12]
 });
@@ -63,7 +63,7 @@ function setBudapestMap() {
 
 async function loadTrees() {
 
-    const res = await fetch("http://127.0.0.1:8000/trees");
+    const res = await fetch("/trees");
     const data = await res.json();
 
     console.log("TREES FROM BACKEND:", data);

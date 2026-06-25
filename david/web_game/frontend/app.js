@@ -1,6 +1,6 @@
 async function loadState() {
 
-    const res = await fetch("http://127.0.0.1:8000/state");
+    const res = await fetch("/state");
     const data = await res.json();
 
     document.getElementById("time").innerText =
@@ -14,11 +14,14 @@ async function loadState() {
 
 async function endTurn() {
 
-    await fetch("http://127.0.0.1:8000/end_turn", {
-        method: "POST"
-    });
+    await fetch(
+        "/end_turn",
+        {
+            method: "POST"
+        }
+    );
 
-    loadState();
+    await loadState();
 }
 
 function openProfile() {
@@ -40,4 +43,3 @@ function toggleTouring() {
 }
 
 loadState();
-setInterval(loadState, 1000);
