@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from shapely.geometry import Point
 from backend.geo import get_random_district, DISTRICTS
 import csv
+from backend.quiz import router as quiz_router
 
 app = FastAPI()
 
@@ -26,6 +27,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(quiz_router)
 
 game = GameState()
 
