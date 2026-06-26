@@ -34,7 +34,9 @@ async function loadTrees() {
             markers.push(marker);
         }
 
-        treeLayer = L.layerGroup(markers);
+        treeLayer = L.layerGroup(markers, {
+            pane: "treesPane"
+        });
         treeLayer.addTo(window.map);
 
     } catch (err) {

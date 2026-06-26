@@ -1,87 +1,85 @@
+let edgeLayer = null;
+
 async function loadEdges() {
 
-    if (!window.map) {
-        console.warn("Edges: map not ready");
-        return;
+    if (!window.map) return;
+
+    const res1 = await fetch("/touring/centroids");
+    const districts = await res1.json();
+
+    const res2 = await fetch("/touring/budapest");
+    const budapest = await res2.json();
+
+    if (edgeLayer) {
+        window.map.removeLayer(edgeLayer);
     }
 
-    try {
-        const res = await fetch("/touring/centroids");
-        const points = await res.json();
+    edgeLayer = L.layerGroup();
 
-        window.touringCentroids = points;
-
-        // remove old layer safely
-        if (edgeLayer) {
-            window.map.removeLayer(edgeLayer);
-            edgeLayer = null;
+    /* -----------------------------
+       BUDAPEST NODE (HUB)
+    ------------------------------*/
+    const centerNode = L.circleMarker(
+        [budapest.lat, budapest.lon],
+        {
+            radius: 10,
+            color: "#ffcc00",
+            fillColor: "#ffcc00",
+            fillOpacity: 1,
+            weight: 2
         }
+    ).bindPopup("Budapest (Hub)");
 
-        edgeLayer = L.layerGroup();
+    edgeLayer.addLayer(centerNode);
 
-        // draw centroid nodes + connections
-        for (let i = 0; i < points.length; i++) {
+    /* -----------------------------
+       DISTRICT NODES + CONNECTIONS
+    ------------------------------*/
+    for (let i = 0; i < districts.length; i++) {
 
-            const p = points[i];
+        const d = districts[i];
 
-            // optional centroid marker
-            const node = L.circleMarker([p.lat, p.lon], {
-                radius: 4,
-                color: "#003cff",
-                fillColor: "#003cff",
-                fillOpacity: 1,
-                weight: 1
-            });
+        // district node
+        const node = L.circleMarker([d.lat, d.lon], {
+            radius: 5,
+            color: "#003cff",
+            fillColor: "#003cff",
+            fillOpacity: 1
+        });
 
-            node.on("click", () => {
-                console.log("Centroid clicked:", i, p);
-            });
+        node.on("click", () => {
+            console.log("District clicked:", i);
+        });
 
-            edgeLayer.addLayer(node);
+        edgeLayer.addLayer(node);
 
-            // connect to previous centroid
-            if (i > 0) {
-
-                const prev = points[i - 1];
-
-                const line = L.polyline(
-                    [
-                        [prev.lat, prev.lon],
-                        [p.lat, p.lon]
-                    ],
-                    {
-                        color: "#3c8cff",
-                        weight: 3,
-                        opacity: 0.5
-                    }
-                );
-
-                // hover interaction (visual polish layer)
-                line.on("mouseover", () => {
-                    line.setStyle({
-                        opacity: 0.9,
-                        weight: 5
-                    });
-                });
-
-                line.on("mouseout", () => {
-                    line.setStyle({
-                        opacity: 0.5,
-                        weight: 3
-                    });
-                });
-
-                line.on("click", () => {
-                    console.log("Edge clicked:", i - 1, "->", i);
-                });
-
-                edgeLayer.addLayer(line);
+        // connection: Budapest → District
+        const line = L.polyline(
+            [
+                [budapest.lat, budapest.lon],
+                [d.lat, d.lon]
+            ],
+            {
+                color: "#3c8cff",
+                weight: 3,
+                opacity: 0.5
             }
-        }
+        );
 
-        edgeLayer.addTo(window.map);
+        line.on("mouseover", () => {
+            line.setStyle({ opacity: 0.9, weight: 5 });
+        });
 
-    } catch (err) {
-        console.error("Failed to load edges:", err);
+        line.on("mouseout", () => {
+            line.setStyle({ opacity: 0.5, weight: 3 });
+        });
+
+        line.on("click", () => {
+            console.log(`Budapest → District ${i}`);
+        });
+
+        edgeLayer.addLayer(line);
     }
+
+    edgeLayer.addTo(window.map);
 }

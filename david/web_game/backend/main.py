@@ -66,7 +66,7 @@ def start_touring():
     global CURRENT_DISTRICTS
 
     # sample 10 districts
-    CURRENT_DISTRICTS = DISTRICTS.sample(10).copy()
+    CURRENT_DISTRICTS = DISTRICTS.sample(6).copy()
 
     # ensure correct CRS
     CURRENT_DISTRICTS = CURRENT_DISTRICTS.to_crs(epsg=4326)
@@ -89,10 +89,16 @@ def get_districts():
         "features": CURRENT_DISTRICTS.__geo_interface__["features"]
     }
 
+@app.get("/touring/budapest")
+def get_budapest():
+    return {
+        "lat": 47.4979,
+        "lon": 19.0402
+    }
 
 @app.get("/touring/centroids")
 def get_centroids():
-
+    
     global CURRENT_DISTRICTS
 
     if CURRENT_DISTRICTS is None:
