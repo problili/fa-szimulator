@@ -37,6 +37,8 @@ async function endTurn() {
     }
 }
 
+/* ---------------- UI ---------------- */
+
 function openProfile() {
     console.log("Profile clicked");
 }
@@ -45,33 +47,39 @@ function openMissions() {
     console.log("Mission clicked");
 }
 
-/* -----------------------------
-   TOURING TOGGLE (IMPORTANT)
-------------------------------*/
-function toggleTouring() {
+/* ---------------- TOURING BUTTON ---------------- */
 
-    console.log("TOURING BUTTON CLICKED");
+function toggleTouring() {
 
     const btn = document.getElementById("touringButton");
 
-    if (!window.mapMode) {
-        window.mapMode = "budapest";
-    }
+    // safety fallback
+    if (!window.mapMode) window.mapMode = "budapest";
 
     if (window.mapMode === "touring") {
 
-        window.mapMode = "budapest";
         window.setBudapestMap();
 
         btn.innerText = "Touring";
 
     } else {
 
-        window.mapMode = "touring";
         window.setTouringMap();
 
         btn.innerText = "Budapest";
     }
 }
 
-loadState();
+/* ---------------- INIT ---------------- */
+
+window.addEventListener("load", () => {
+
+    loadState();
+
+    // IMPORTANT:
+    // DO NOT create map here anymore.
+    // touring.js handles map creation.
+
+    // only ensure default state
+    window.mapMode = "budapest";
+});
