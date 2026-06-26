@@ -28,6 +28,8 @@ function openMissions() {
     console.log("Mission clicked");
 }
 
+
+
 /* Called from Touring button */
 function toggleTouring() {
 
