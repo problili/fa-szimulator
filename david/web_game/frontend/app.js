@@ -54,21 +54,13 @@ function toggleTouring() {
     if (!window.mapMode) window.mapMode = "budapest";
 
     if (window.mapMode === "touring") {
-
-        window.mapMode = "budapest";
         window.setBudapestMap();
-
-        btn.innerText = "Enter Touring";
-
+        btn.innerText = "Touring";
     } else {
-
-        window.mapMode = "touring";
         window.setTouringMap();
-
-        btn.innerText = "Exit Touring";
+        btn.innerText = "Budapest";
     }
 }
-
 /* ---------------- INIT ---------------- */
 
 window.addEventListener("load", async () => {

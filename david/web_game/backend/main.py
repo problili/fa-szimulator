@@ -59,6 +59,15 @@ def end_turn():
     game.next_turn()
     return get_state()
 
+@app.post("/quiz/correct")
+def quiz_correct():
+    game.szakertelem += 1
+    return {
+        "time": game.get_time(),
+        "elegedettseg": game.elegedettseg,
+        "szakertelem": game.szakertelem,
+        "furgon": game.furgon
+    }
 @app.post("/reset")
 def reset():
     game.reset_touring()
